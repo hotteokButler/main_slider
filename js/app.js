@@ -107,7 +107,7 @@ const shiftSlide = (dir, action = false) => {
   mainSlide.classList.add('shifting');
 
   if (allowShift) {
-    // 벗어나는 거 막음 (안전코드) - 트랜지션이 끝나면 다음 클릭 가능
+    // 트랜지션이 끝나면 다음 클릭 가능
     if (!action) {
       posInitial = -slideWidth * (index + 1);
     }
@@ -133,7 +133,7 @@ const checkIndex = () => {
   }
   mainSlide.setAttribute('data-slide', index);
   selectedlDot[index].classList.add('on');
-  allowShift = true; // 벗어나는거 막음 (안전코드)
+  allowShift = true; //탈주방지
 };
 
 //pagination
