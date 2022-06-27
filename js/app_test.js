@@ -1,3 +1,8 @@
+/*
+@copyright in 'oneup-creative'
+@coding by jisoo
+*/
+
 import Custom_slide from "./custom_slide.js";
 
 // object양식
@@ -10,7 +15,10 @@ const elements = {
   // slide imgs
   mainSlideImages: document.querySelectorAll(".main-slider_img"),
   // slide pagination
-  pagination: document.querySelector(".main-slider_pagination"),
+  pagination: {
+    elem: document.querySelector(".main-slider_pagination"),
+    class: "on",
+  },
   // slide button
   slideArrow: {
     prev: document.getElementById("prev"),
@@ -24,8 +32,14 @@ const elements = {
     slideGap: 0,
     // 활성화된 pagination class
     paginationActiveClass: "on",
+    // autoslide 유무
+    autoSlide: {
+      state: true,
+      speed: 7000,
+    },
   },
 };
+
 //object 양식
 
 const newMainSlide = new Custom_slide(elements);

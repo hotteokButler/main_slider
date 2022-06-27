@@ -1,10 +1,15 @@
+/*
+@copyright in 'oneup-creative'
+*/
+
 export default class Custom_slide {
   constructor(object) {
     this.object = object;
     this.mainSlideContainer = object.mainSlideContainer;
     this.mainSlide = object.mainSlide;
     this.mainSlideImages = object.mainSlideImages;
-    this.pagination = object.pagination;
+    this.pagination = object.pagination.elem;
+    this.paginationOnClass = object.pagination.class;
 
     this.prev = object.slideArrow.prev;
     this.next = object.slideArrow.next;
@@ -13,10 +18,9 @@ export default class Custom_slide {
 
     this.slideWidth = this.mainSlideImages[0].clientWidth;
     this.slidesLength = this.mainSlideImages.length;
-
+    this.autoSlideState = object.value.autoSlide.state;
+    this.autoSlideSpeed = object.value.autoSlide.speed;
     this.selectedlDot;
-
-    this.mainSlide.style.transform = `translateX(${-this.slideWidth}px)`;
 
     //수정x
     this.variable = {
@@ -36,6 +40,7 @@ export default class Custom_slide {
     this.posFinal = this.variable.posFinal;
     this.allowShift = this.variable.allowShift; //트랜지션이 끝나면 다음 클릭 가능
     this.offsetLeft = this.variable.offsetLeft;
+
     //수정x
 
     // event
@@ -55,9 +60,17 @@ export default class Custom_slide {
 
     // Transition
     this.mainSlide.addEventListener("transitionend", (e) => this.checkIndex());
+
+    //window
+
+    window.addEventListener("load", (e) => {
+      this.autoSlide(this.autoSlideState);
+    });
   }
 
   slideInit() {
+    // 초기설정
+    this.mainSlide.style.transform = `translateX(${-this.slideWidth}px)`;
     // indexing
     for (let index = 0; index < this.mainSlideImages.length; index++) {
       this.mainSlideImages[index].setAttribute("data-index", index);
@@ -66,7 +79,7 @@ export default class Custom_slide {
       this.pagination.appendChild(span);
     }
     this.selectedlDot = this.pagination.querySelectorAll(".main-slider_pagination span");
-    this.selectedlDot[0].classList.add("on");
+    this.selectedlDot[0].classList.add(this.paginationOnClass);
 
     this.mainSlide.setAttribute("data-slide", 0);
 
@@ -144,7 +157,7 @@ export default class Custom_slide {
       if (!action) {
         this.posInitial = -this.slideWidth * (this.index + 1);
       }
-      this.selectedlDot[this.index].classList.remove("on");
+      this.selectedlDot[this.index].classList.remove(this.paginationOnClass);
       this.moveSlide(dir);
     }
 
@@ -181,7 +194,7 @@ export default class Custom_slide {
       this.mainSlide.style.transform = "translateX(" + -((this.index + 1) * this.slideWidth) + "px)";
     }
     this.mainSlide.setAttribute("data-slide", this.index);
-    this.selectedlDot[this.index].classList.add("on");
+    this.selectedlDot[this.index].classList.add(this.paginationOnClass);
     this.allowShift = true; //탈주방지
   };
 
@@ -192,9 +205,19 @@ export default class Custom_slide {
     }
     this.mainSlide.classList.add("shifting");
     this.mainSlide.setAttribute("data-slide", target.dataset.index);
-    this.selectedlDot.forEach((dot) => dot.classList.remove("on"));
+    this.selectedlDot.forEach((dot) => dot.classList.remove(this.paginationOnClass));
     this.index = Number(this.mainSlide.dataset.slide);
-    this.selectedlDot[this.index].classList.add("on");
+    this.selectedlDot[this.index].classList.add(this.paginationOnClass);
     this.mainSlide.style.transform = "translateX(" + -((this.index + 1) * this.slideWidth) + "px)";
+  };
+
+  // auto slide
+  autoSlide = (autoSlideState) => {
+    const autoStart = setInterval(function () {
+      this.next.click();
+    }, this.autoSlideSpeed);
+    if (!autoSlideState) {
+      clearInterval(autoStart);
+    }
   };
 }
