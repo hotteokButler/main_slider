@@ -29,12 +29,12 @@ const elements = {
     // drag 거리
     threshold: 100,
     // 마진값
-    slideGap: 0,
+    slideGap: 50,
     // 활성화된 pagination class
     paginationActiveClass: "on",
     // autoslide 유무
     autoSlide: {
-      state: true,
+      state: false,
       speed: 7000,
     },
   },

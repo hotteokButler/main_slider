@@ -1,5 +1,6 @@
 /*
 @copyright in 'oneup-creative'
+@coding by jisoo
 */
 
 export default class Custom_slide {
@@ -18,6 +19,7 @@ export default class Custom_slide {
 
     this.slideWidth = this.mainSlideImages[0].clientWidth;
     this.slidesLength = this.mainSlideImages.length;
+    this.slideGap = object.value.slideGap;
     this.autoSlideState = object.value.autoSlide.state;
     this.autoSlideSpeed = object.value.autoSlide.speed;
     this.selectedlDot;
@@ -110,7 +112,7 @@ export default class Custom_slide {
     this.posInitial;
     this.posFinal;
 
-    this.posInitial = -this.slideWidth * (this.index + 1);
+    this.posInitial = -this.slideWidth * (this.index + 1) - this.slideGap;
     this.offsetLeft = this.posInitial;
     if (e.type == "touchstart") {
       this.posX1 = e.touches[0].clientX;
@@ -133,7 +135,7 @@ export default class Custom_slide {
       this.posX1 = e.clientX;
     }
     this.offsetLeft -= this.posX2;
-    this.mainSlide.style.transform = "translateX(" + this.offsetLeft + "px)";
+    this.mainSlide.style.transform = `translateX(${this.offsetLeft}px)`;
   };
 
   // dragEnd
@@ -155,7 +157,7 @@ export default class Custom_slide {
     if (this.allowShift) {
       // 트랜지션이 끝나면 다음 클릭 가능
       if (!action) {
-        this.posInitial = -this.slideWidth * (this.index + 1);
+        this.posInitial = -this.slideWidth * (this.index + 1) - this.slideGap;
       }
       this.selectedlDot[this.index].classList.remove(this.paginationOnClass);
       this.moveSlide(dir);
@@ -170,14 +172,14 @@ export default class Custom_slide {
     let value;
     // next
     if (position === "next") {
-      value = this.posInitial - this.slideWidth;
+      value = this.posInitial - this.slideWidth - this.slideGap;
       this.index++;
       // prev
     } else if (position === "prev") {
-      value = this.posInitial + this.slideWidth;
+      value = this.posInitial + this.slideWidth + this.slideGap;
       this.index--;
     }
-    this.mainSlide.style.transform = "translateX(" + value + "px)";
+    this.mainSlide.style.transform = `translateX(${value}px)`;
   };
 
   // checkIndex
@@ -185,13 +187,13 @@ export default class Custom_slide {
     this.mainSlide.classList.remove("shifting");
 
     if (this.index === -1) {
-      this.mainSlide.style.transform = "translateX(" + -(this.slidesLength * this.slideWidth) + "px)";
+      this.mainSlide.style.transform = `translateX(${-(this.slidesLength * this.slideWidth) - this.slideGap}px)`;
       this.index = this.slidesLength - 1;
     } else if (this.index === this.slidesLength) {
-      this.mainSlide.style.transform = "translateX(" + -(1 * this.slideWidth) + "px)";
+      this.mainSlide.style.transform = `translateX(${-(1 * this.slideWidth) - this.slideGap}px)`;
       this.index = 0;
     } else {
-      this.mainSlide.style.transform = "translateX(" + -((this.index + 1) * this.slideWidth) + "px)";
+      this.mainSlide.style.transform = `translateX(${-((this.index + 1) * this.slideWidth) - this.slideGap}px)`;
     }
     this.mainSlide.setAttribute("data-slide", this.index);
     this.selectedlDot[this.index].classList.add(this.paginationOnClass);
@@ -203,12 +205,14 @@ export default class Custom_slide {
     if (target.nodeName !== "SPAN") {
       return;
     }
+    console.log("click");
+
     this.mainSlide.classList.add("shifting");
     this.mainSlide.setAttribute("data-slide", target.dataset.index);
     this.selectedlDot.forEach((dot) => dot.classList.remove(this.paginationOnClass));
     this.index = Number(this.mainSlide.dataset.slide);
     this.selectedlDot[this.index].classList.add(this.paginationOnClass);
-    this.mainSlide.style.transform = "translateX(" + -((this.index + 1) * this.slideWidth) + "px)";
+    this.mainSlide.style.transform = `translateX(${-((this.index + 1) * this.slideWidth) - this.slideGap}px)`;
   };
 
   // auto slide
@@ -216,6 +220,7 @@ export default class Custom_slide {
     const autoStart = setInterval(function () {
       this.next.click();
     }, this.autoSlideSpeed);
+
     if (!autoSlideState) {
       clearInterval(autoStart);
     }
