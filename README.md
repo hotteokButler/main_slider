@@ -4,7 +4,7 @@
 
 - 터치 슬라이드
 - pagination index
-
+- slide active class name = shifing 
 
 
 ```javascript
