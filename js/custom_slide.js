@@ -115,7 +115,7 @@ export default class Custom_slide {
     this.mainSlide.insertBefore(cloneLast, firstSlide);
 
     window.addEventListener("DOMContentLoaded", () => {
-      this.variable.slideWidth = document.querySelector("body").clientWidth;
+      this.variable.slideWidth = this.mainSlideContainer.clientWidth;
       Object.keys(this.mainSlide.children).forEach((key) => {
         this.mainSlide.children[key].style.width = `${this.variable.slideWidth}px`;
         this.mainSlide.children[key].style.height = "auto";
@@ -123,7 +123,7 @@ export default class Custom_slide {
 
       this.mainSlide.style.width = `${this.variable.slideWidth * Object.keys(this.mainSlide.children).length}px`;
 
-      this.autoSlide(this.autoSlideState, this.next, this.autoSlideSpeed);
+      this.autoSlide(this.autoSlideState, this.shiftSlide, this.autoSlideSpeed);
     });
 
     this.index = Number(this.mainSlide.dataset.slide);
@@ -138,7 +138,6 @@ export default class Custom_slide {
       "resize",
       (e) => {
         this.variable.slideWidth = this.mainSlideContainer.clientWidth;
-        console.log(this.mainSlideContainer.getBoundingClientRect().width);
         this.mainSlide.style.width = `${this.variable.slideWidth * Object.keys(this.mainSlide.children).length}px`;
         Object.keys(this.mainSlide.children).forEach((key) => (this.mainSlide.children[key].style.width = `${this.variable.slideWidth}px`));
         this.mainSlide.style.transform = `translateX(${-this.variable.slideWidth * (this.index + 1) + this.slideGap}px)`;
@@ -277,10 +276,10 @@ export default class Custom_slide {
   };
 
   // auto slide
-  autoSlide = (autoSlideState, target, speed) => {
+  autoSlide = (autoSlideState, func, speed) => {
     if (autoSlideState) {
       setInterval(function () {
-        target.click();
+        func("next", false);
       }, speed);
     } else if (!autoSlideState) {
       return;
